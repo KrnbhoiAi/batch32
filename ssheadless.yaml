@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+
+metadata:
+  name: my-ss
+
+spec:
+  serviceName: mysql-service
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: myapp
+
+  template:
+    metadata:
+      labels:
+        app: myapp
+
+    spec:
+      containers:
+      - name: mysql-container
+        image: mysql:8.0
+
+        ports:
+        - containerPort: 3306
+
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: root123
+
+        - name: MYSQL_USER
+          value: admin
+
+        - name: MYSQL_PASSWORD
+          value: admin123
+
+        - name: MYSQL_DATABASE
+          value: mydb
+
+---
+
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: mysql-service
+
+spec:
+  clusterIP: None
+
+  selector:
+    app: myapp
+
+  ports:
+  - port: 3306
+    targetPort: 3306

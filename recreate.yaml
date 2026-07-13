@@ -1,15 +1,20 @@
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 
 metadata:
-  name: my-daemonset
+  name: my-deployment
   labels:
     app: myapp
 
 spec:
+  replicas: 5
+
   selector:
     matchLabels:
       app: myapp
+
+  strategy:
+    type: Recreate
 
   template:
     metadata:
@@ -19,4 +24,6 @@ spec:
     spec:
       containers:
       - name: nginx-container
-        image: amazon/cloudwatch-agent
+        image: nginx:latest
+        ports:
+        - containerPort: 80
